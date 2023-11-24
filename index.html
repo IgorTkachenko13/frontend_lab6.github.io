@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Вивід Користувачів</title>
+    <style>
+        .user-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .user {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 10px;
+            width: 200px;
+            text-align: center;
+        }
+
+        .user img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 50%;
+        }
+
+        .user h3 {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+
+        .user p {
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+<div id="userContainer" class="user-container">
+    <button id="loadUsersBtn">Завантажити Користувачів</button>
+</div>
+
+<script>
+    document.getElementById('loadUsersBtn').addEventListener('click', function() {
+        fetch('https://randomuser.me/api/?results=5')
+            .then(response => response.json())
+            .then(data => {
+                const users = data.results;
+                const userContainer = document.getElementById('userContainer');
+                userContainer.innerHTML = ''; 
+
+                users.forEach(user => {
+                    const userDiv = document.createElement('div');
+                    userDiv.className = 'user';
+
+                    const picture = document.createElement('img');
+                    picture.src = user.picture.large;
+
+                    const name = document.createElement('h3');
+                    name.textContent = `${user.name.title} ${user.name.first} ${user.name.last}`;
+
+                    const country = document.createElement('p');
+                    country.textContent = `Країна: ${user.location.country}`;
+
+                    const email = document.createElement('p');
+                    email.textContent = `Email: ${user.email}`;
+
+                    const phone = document.createElement('p');
+                    phone.textContent = `Телефон: ${user.phone}`;
+
+                    const coordinates = document.createElement('p');
+                    coordinates.textContent = `Координати: ${user.location.coordinates.latitude}, ${user.location.coordinates.longitude}`;
+
+                    userDiv.appendChild(picture);
+                    userDiv.appendChild(name);
+                    userDiv.appendChild(country);
+                    userDiv.appendChild(email);
+                    userDiv.appendChild(phone);
+                    userDiv.appendChild(coordinates);
+
+                    userContainer.appendChild(userDiv);
+                });
+            })
+            .catch(error => {
+                console.error('Помилка при отриманні даних:', error);
+            });
+    });
+</script>
+
+</body>
+</html>
